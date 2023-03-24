@@ -45,12 +45,17 @@ namespace Mariani_File
 
         private void button1_Click(object sender, EventArgs e)
         {
-            prodotto.nome = textBox1.Text;
-            prodotto.prezzo = float.Parse(textBox2.Text);
-            ScritturaFile(prodotto);
-            textBox1.Clear();
-            textBox2.Clear();
-            textBox1.Focus();
+            bool asd = String.IsNullOrEmpty(textBox1.Text);
+            bool asd1 = String.IsNullOrEmpty(textBox2.Text);
+            if (asd != true && asd1 != true)
+            {
+                prodotto.nome = textBox1.Text;
+                prodotto.prezzo = float.Parse(textBox2.Text);
+                ScritturaFile(prodotto);
+                textBox1.Clear();
+                textBox2.Clear();
+                textBox1.Focus();
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -88,20 +93,20 @@ namespace Mariani_File
 
         private void Cancellazione(string oggetto)
         {
-            
+            string s = "";
             using (StreamReader reader = File.OpenText(fileName))
             {
-                string s = "";
-                while ((s = reader.ReadLine()) != null)
+                using (StreamWriter writer = new StreamWriter(@"appoggio.csv", append: true))
                 {
-                    string[] splittaggio1 = s.Split(';');
+                    while ((s = reader.ReadLine()) != null)
+                    {
+                        string[] splittaggio1 = s.Split(';');
 
-                    if (splittaggio1[0] == oggetto)
-                    {
+                        if (splittaggio1[0] == oggetto)
+                        {
                         splittaggio1[2] = "true";
-                    }
-                    using (StreamWriter writer = new StreamWriter(@"appoggio.csv", append: true))
-                    {
+                        }
+                    
                         if (splittaggio1[2] == "false")
                         {
                             writer.WriteLine(s);
@@ -110,7 +115,7 @@ namespace Mariani_File
                         {
                             writer.WriteLine(splittaggio1[0] + ";" + splittaggio1[1] + ";" + splittaggio1[2]);
                         }
-                        writer.Close();
+                        
                     }
                 }
                 reader.Close();
@@ -137,16 +142,16 @@ namespace Mariani_File
 
         private void Modifica(string parola, string oggetto)
         {
-
+            string s = "";
             using (StreamReader reader = File.OpenText(fileName))
             {
-                string s = "";
-                while ((s = reader.ReadLine()) != null)
+                using (StreamWriter writer = new StreamWriter(@"appoggio.csv", append: true))
                 {
-                    string[] splittaggio1 = s.Split(';');
-                    string[] splittaggio2 = splittaggio1[1].Split(';');
-                    using (StreamWriter writer = new StreamWriter(@"appoggio.csv", append: true))
+                    while ((s = reader.ReadLine()) != null)
                     {
+                        string[] splittaggio1 = s.Split(';');
+                        string[] splittaggio2 = splittaggio1[1].Split(';');
+                    
                         if (parola == splittaggio1[0])
                         {
                             writer.WriteLine(oggetto + ";" + splittaggio1[1] + ";" + splittaggio1[2]);
@@ -155,7 +160,7 @@ namespace Mariani_File
                         {
                             writer.WriteLine(s);
                         }
-                        writer.Close();
+                        
                     }
                 }
                 reader.Close();
