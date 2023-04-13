@@ -181,5 +181,75 @@ namespace Mariani_File
         {
             groupBox1.Show();
         }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Ricompatta();
+        }
+
+        private void Ricompatta()
+        {
+            string s = "";
+
+            using (StreamReader reader = File.OpenText(fileName))
+            {
+                using (StreamWriter writer = new StreamWriter(@"appoggio.csv", append: true))
+                {
+                    while ((s = reader.ReadLine()) != null)
+                    {
+                        string[] split = s.Split(';');
+
+                        if (split[2] != "true")
+                        {
+                            writer.WriteLine(s);
+                        }
+                    }
+                }
+                reader.Close();
+            }
+            File.Delete(@"testo.csv");
+            File.Move(@"appoggio.csv", @"testo.csv");
+            listView1.Clear();
+            AperturaFile();
+            groupBox1.Hide();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            Recupero();
+        }
+
+        private void Recupero()
+        {
+            string s = "";
+
+            using (StreamReader reader = File.OpenText(fileName))
+            {
+                using (StreamWriter writer = new StreamWriter(@"appoggio.csv", append: true))
+                {
+                    while ((s = reader.ReadLine()) != null)
+                    {
+                        string[] splittaggio1 = s.Split(';');
+
+                        if (splittaggio1[2] == "true")
+                        {
+                            writer.WriteLine(splittaggio1[0] + ";" + splittaggio1[1] + ";false");
+                        }
+
+                        if (splittaggio1[2] == "false")
+                        {
+                            writer.WriteLine(s);
+                        }
+
+                    }
+                }
+                reader.Close();
+            }
+            File.Delete(@"testo.csv");
+            File.Move(@"appoggio.csv", @"testo.csv");
+            listView1.Clear();
+            AperturaFile();
+            groupBox1.Hide();
+        }
     }
 }
